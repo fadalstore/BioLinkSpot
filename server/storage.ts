@@ -1,4 +1,13 @@
-import { type User, type InsertUser, type SocialLink, type InsertSocialLink } from "@shared/schema";
+import { 
+  type User, 
+  type InsertUser, 
+  type SocialLink, 
+  type InsertSocialLink,
+  type Tip,
+  type InsertTip,
+  type Analytics,
+  type InsertAnalytics
+} from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -11,15 +20,25 @@ export interface IStorage {
   updateSocialLink(id: string, socialLink: Partial<InsertSocialLink>): Promise<SocialLink | undefined>;
   deleteSocialLink(id: string): Promise<boolean>;
   getAllUsers(): Promise<User[]>;
+  // Tips functionality
+  createTip(tip: InsertTip): Promise<Tip>;
+  getTips(userId: string): Promise<Tip[]>;
+  // Analytics functionality
+  createAnalytics(analytics: InsertAnalytics): Promise<Analytics>;
+  getAnalytics(userId: string): Promise<Analytics[]>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private socialLinks: Map<string, SocialLink>;
+  private tips: Map<string, Tip>;
+  private analytics: Map<string, Analytics>;
 
   constructor() {
     this.users = new Map();
     this.socialLinks = new Map();
+    this.tips = new Map();
+    this.analytics = new Map();
     
     // Create default user with social links
     this.initializeDefaultData();
@@ -38,6 +57,10 @@ export class MemStorage implements IStorage {
       followers: 12500,
       following: 2100,
       posts: 458,
+      stripeCustomerId: null,
+      premiumPlan: null,
+      premiumExpiresAt: null,
+      createdAt: new Date(),
     };
 
     this.users.set(defaultUser.id, defaultUser);
@@ -116,6 +139,10 @@ export class MemStorage implements IStorage {
       followers: insertUser.followers ?? null,
       following: insertUser.following ?? null,
       posts: insertUser.posts ?? null,
+      stripeCustomerId: insertUser.stripeCustomerId ?? null,
+      premiumPlan: insertUser.premiumPlan ?? null,
+      premiumExpiresAt: insertUser.premiumExpiresAt ?? null,
+      createdAt: new Date(),
     };
     this.users.set(id, user);
     return user;
@@ -162,6 +189,51 @@ export class MemStorage implements IStorage {
 
   async getAllUsers(): Promise<User[]> {
     return Array.from(this.users.values());
+  }
+
+  // Tips functionality
+  async createTip(insertTip: InsertTip): Promise<Tip> {
+    const id = randomUUID();
+    const tip: Tip = { 
+      ...insertTip, 
+      id,
+      currency: insertTip.currency ?? "USD",
+      paymentIntentId: insertTip.paymentIntentId ?? null,
+      status: insertTip.status ?? "pending",
+      tipperName: insertTip.tipperName ?? null,
+      message: insertTip.message ?? null,
+      createdAt: new Date(),
+    };
+    this.tips.set(id, tip);
+    return tip;
+  }
+
+  async getTips(userId: string): Promise<Tip[]> {
+    return Array.from(this.tips.values()).filter(
+      (tip) => tip.userId === userId,
+    );
+  }
+
+  // Analytics functionality
+  async createAnalytics(insertAnalytics: InsertAnalytics): Promise<Analytics> {
+    const id = randomUUID();
+    const analytics: Analytics = { 
+      ...insertAnalytics, 
+      id,
+      linkId: insertAnalytics.linkId ?? null,
+      metadata: insertAnalytics.metadata ?? null,
+      ipAddress: insertAnalytics.ipAddress ?? null,
+      userAgent: insertAnalytics.userAgent ?? null,
+      createdAt: new Date(),
+    };
+    this.analytics.set(id, analytics);
+    return analytics;
+  }
+
+  async getAnalytics(userId: string): Promise<Analytics[]> {
+    return Array.from(this.analytics.values()).filter(
+      (analytics) => analytics.userId === userId,
+    );
   }
 }
 

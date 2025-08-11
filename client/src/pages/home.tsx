@@ -1,9 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { Share2, Copy, TrendingUp, Heart } from "lucide-react";
+import { Share2, Copy, TrendingUp, Heart, Crown, CreditCard } from "lucide-react";
 import { ProfileCard } from "@/components/profile-card";
 import { SocialLinks } from "@/components/social-links";
+import { TipJar } from "@/components/tip-jar";
+import { PremiumFeatures } from "@/components/premium-features";
+import { AnalyticsDashboard } from "@/components/analytics-dashboard";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import type { User, SocialLink } from "@shared/schema";
 
@@ -93,9 +97,52 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-md mx-auto px-6 pb-8">
-        <ProfileCard user={data.user} />
-        <SocialLinks socialLinks={data.socialLinks} />
+      <main className="max-w-4xl mx-auto px-6 pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Profile */}
+          <div className="lg:col-span-1">
+            <ProfileCard user={data.user} />
+          </div>
+          
+          {/* Right Column - Content Tabs */}
+          <div className="lg:col-span-2">
+            <Tabs defaultValue="links" className="w-full">
+              <TabsList className="grid w-full grid-cols-4 mb-6">
+                <TabsTrigger value="links" data-testid="tab-links">
+                  Links
+                </TabsTrigger>
+                <TabsTrigger value="tip" data-testid="tab-tip">
+                  <CreditCard className="w-4 h-4 mr-1" />
+                  Tip
+                </TabsTrigger>
+                <TabsTrigger value="premium" data-testid="tab-premium">
+                  <Crown className="w-4 h-4 mr-1" />
+                  Premium
+                </TabsTrigger>
+                <TabsTrigger value="analytics" data-testid="tab-analytics">
+                  <TrendingUp className="w-4 h-4 mr-1" />
+                  Analytics
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="links" className="space-y-6">
+                <SocialLinks socialLinks={data.socialLinks} />
+              </TabsContent>
+              
+              <TabsContent value="tip" className="space-y-6">
+                <TipJar />
+              </TabsContent>
+              
+              <TabsContent value="premium" className="space-y-6">
+                <PremiumFeatures />
+              </TabsContent>
+              
+              <TabsContent value="analytics" className="space-y-6">
+                <AnalyticsDashboard userId={data.user.id} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
 
         {/* Footer */}
         <footer className="mt-12 text-center">

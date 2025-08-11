@@ -1,8 +1,8 @@
-# LinkHub - Social Media Link Aggregator
+# LinkHub - Monetized Social Media Link Aggregator
 
 ## Overview
 
-LinkHub is a modern "link-in-bio" social media aggregator application that allows users to create beautiful profile pages showcasing all their social media links in one place. Built with React, Express, and PostgreSQL, it provides a clean, responsive interface for managing and displaying social media profiles with customizable themes and interactive elements.
+LinkHub is a comprehensive "link-in-bio" platform that enables content creators to showcase their social media presence while generating real revenue. Built with React, Express, PostgreSQL, and Stripe integration, it offers a complete monetization ecosystem with tip jars, premium subscriptions, analytics tracking, and customizable themes for maximum engagement and earning potential.
 
 ## User Preferences
 
@@ -21,13 +21,16 @@ Preferred communication style: Simple, everyday language.
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js for the REST API server
 - **Language**: TypeScript throughout the stack for consistency
-- **Data Storage**: In-memory storage implementation with interface for future database integration
-- **API Design**: RESTful endpoints for user profiles and social link management
+- **Payment Processing**: Stripe integration for tips and premium subscriptions
+- **Data Storage**: In-memory storage with support for tips, analytics, and user payments
+- **API Design**: RESTful endpoints for profiles, payments, analytics, and monetization features
 - **Development**: ESBuild for server bundling and production deployment
 
 ### Database Schema
-- **Users Table**: Stores profile information (username, display name, bio, profile picture, social stats)
-- **Social Links Table**: Manages platform-specific links (Instagram, Twitter, LinkedIn, etc.)
+- **Users Table**: Profile information with Stripe customer IDs and premium plan tracking
+- **Social Links Table**: Platform-specific links (Instagram, Twitter, LinkedIn, etc.)
+- **Tips Table**: Payment tracking for tip jar functionality with amounts and status
+- **Analytics Table**: Comprehensive tracking of views, clicks, and user interactions
 - **ORM**: Drizzle ORM configured for PostgreSQL with schema validation using Zod
 
 ### Theme System
@@ -36,11 +39,19 @@ Preferred communication style: Simple, everyday language.
 - **Component Integration**: Theme-aware components using context API
 
 ### UI/UX Features
-- **Responsive Design**: Mobile-first approach with adaptive layouts
+- **Responsive Design**: Mobile-first approach with adaptive layouts across all devices
 - **Interactive Elements**: Hover effects, click animations, and smooth transitions
 - **Social Platform Integration**: Pre-configured styling for major social platforms
+- **Tabbed Interface**: Organized sections for Links, Tips, Premium, and Analytics
 - **Share Functionality**: Native web share API with clipboard fallback
-- **Toast Notifications**: User feedback for actions like copying links
+- **Toast Notifications**: User feedback for payments, subscriptions, and interactions
+
+### Monetization Features
+- **Tip Jar System**: Accept one-time payments with custom amounts and quick-tip buttons
+- **Premium Subscriptions**: Three-tier subscription model (Basic $4.99, Pro $9.99, Business $19.99)
+- **Analytics Dashboard**: Track profile views, link clicks, engagement rates, and revenue
+- **Stripe Integration**: Secure payment processing for tips and subscriptions
+- **Recent Supporters**: Display of recent tip contributors to encourage more donations
 
 ### Development Workflow
 - **Hot Reload**: Vite HMR for instant development feedback
@@ -81,5 +92,6 @@ Preferred communication style: Simple, everyday language.
 ### Additional Features
 - **Date-fns**: Date manipulation and formatting utilities
 - **Wouter**: Lightweight routing library
-- **Nanoid**: Unique ID generation
+- **Stripe**: Payment processing and subscription management
 - **CMDK**: Command palette component integration
+- **React Query**: Advanced caching for analytics and payment data
